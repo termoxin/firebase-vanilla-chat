@@ -2,6 +2,7 @@ import * as firebase from "firebase";
 import { initRoutes, route } from "./router";
 import Auth from "./Auth";
 import Chat from "./Chat";
+import "./styles.css";
 
 const config = {
   apiKey: "AIzaSyDYhhbi44SM8GosqoPnGGoETNs3ajGCR_4",
@@ -21,6 +22,8 @@ class Firechat {
     firebase.initializeApp(config);
     this.init();
     this.listen();
+    route("/login", Auth.bind(this));
+    route("/chat", Chat.bind(this));
   }
 
   init() {
@@ -37,8 +40,7 @@ class Firechat {
   }
 
   render() {
-    route("/login", Auth.bind(this));
-    route("/chat", Chat.bind(this));
+    Chat.call(this);
   }
 
   listen() {
@@ -102,5 +104,3 @@ class Firechat {
 }
 
 const firechat = new Firechat(config);
-
-// window.history.pushState({}, null, "/native");
