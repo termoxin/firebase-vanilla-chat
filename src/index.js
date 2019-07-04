@@ -17,6 +17,7 @@ const config = {
 class Firechat {
   constructor(config) {
     this.messages = null;
+    this.online = null;
     this.error = null;
 
     firebase.initializeApp(config);
@@ -40,7 +41,53 @@ class Firechat {
   }
 
   render() {
+    // this.checkOnline(() => {
+    //   let online = [];
+
+    //   this.get("/status").then(status => {
+    //     for (let key in status) {
+    //       if (status[key].state === "online") {
+    //         online.push(status[key]);
+    //       }
+    //     }
+    //   });
+    //   this.online = online;
+    // });
     Chat.call(this);
+  }
+
+  checkOnline(callback) {
+    const uid = firebase.auth().currentUser.uid;
+
+    const userStatusDatabaseRef = firebase.database().ref("/status/" + uid);
+
+    const isOfflineForDatabase = {
+      id: uid,
+      state: "offline",
+      last_changed: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    const isOnlineForDatabase = {
+      id: uid,
+      state: "online",
+      last_changed: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    firebase
+      .database()
+      .ref(".info/connected")
+      .on("value", function(snapshot) {
+        if (snapshot.val() == false) {
+          return;
+        }
+        userStatusDatabaseRef
+          .onDisconnect()
+          .set(isOfflineForDatabase)
+          .then(function() {
+            userStatusDatabaseRef.set(isOnlineForDatabase);
+            callback();
+          });
+      });
   }
 
   listen() {

@@ -4,11 +4,13 @@ function Chat() {
   if (!email) {
     this.redirect("/login");
   } else {
-    root.innerHTML = /*html*/ `<input type="text" placeholder="Message..." id="message" />
+    const render = () => {
+      root.innerHTML = /*html*/ `<input type="text" placeholder="Message..." id="message" />
       <button id="send">Send</button>
       <ul id="messages"></ul>`;
 
-    const render = () => {
+      console.log(this.online);
+
       const messagesList = document.getElementById("messages");
 
       const li = this.messages
