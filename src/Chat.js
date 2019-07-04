@@ -4,7 +4,7 @@ function Chat() {
   if (!email) {
     this.redirect("/login");
   } else {
-    root.innerHTML = `<input type="text" placeholder="Message..." id="message" />
+    root.innerHTML = /*html*/ `<input type="text" placeholder="Message..." id="message" />
       <button id="send">Send</button>
       <ul id="messages"></ul>`;
 
